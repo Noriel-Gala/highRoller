@@ -33,7 +33,7 @@ int main()
     DWORD startTime = GetTickCount(); //Record start time, AI
     DWORD elapsedTime = 0; //AI
         
-    while (elapsedTime < 6000) { //Spin for 6 seconds, used AI for the elapsedTime & DWORD to set up automatic spinning, it was manual before
+    while (elapsedTime < 5000) { //Spin for 6 seconds, used AI for the elapsedTime & DWORD to set up automatic spinning, it was manual before
         Sleep(80);
         //generate random numbers
         a = rand() % 10;
