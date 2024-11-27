@@ -11,6 +11,17 @@ void gotoxy(int x, int y) { //AI used for gotoxy
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
+//Centers text on console screen (AI)
+void printCentered(const char *text, int y) {
+    CONSOLE_SCREEN_BUFFER_INFO csbi;
+    GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
+    int consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    int textLength = strlen(text);
+    int x = (consoleWidth - textLength) / 2;
+    gotoxy(x, y);
+    printf("%s", text);
+}
+
 int main()
 {
     int a, b, c;
@@ -19,7 +30,8 @@ int main()
     do {
     srand((unsigned int)time(NULL));
     
-    printf("\n\t\t***-: press any key to play the game :-***");
+    system("cls");
+    printf("\n\t\t***-: press any key to play the game :-***", 10);
     
     while (!_kbhit()) { //Wait for key press
         Sleep(100);
@@ -40,29 +52,32 @@ int main()
         b = rand() % 10;
         c = rand() % 10;
         
-        //display values
-        gotoxy(20, 10);
-        printf("%d %d %d", a, b, c);
-        fflush(stdout); //AI, ensures output is updated immediately
+        //display values centered (AI)
+        char numbers[20];
+        sprintf(numbers, "%d %d %d", a, b, c);
+        printCentered(numbers, 12);
+        fflush(stdout); //ensures output is updated immediately
 
         elapsedTime = GetTickCount() - startTime; //Calculate elapsed time
         
     }
     PlaySound(NULL, 0, SND_PURGE); //stops spinning sound after 6 seconds
+    
     //Above sets up the classic arcade style machine with all the numbers spinning
     //Theme to be adjusted later this is just a prototype
 
+    
     printf("\n\t\t");
     if (a == b && b == c) {
         PlaySound("jackpot.wav", NULL, SND_ASYNC | SND_FILENAME);
-        printf("\n***-: You Won The Game! :-***");
+        printf("\n***-: You Won The Game! :-***", 12);
 
     } else {
-        printf("\n***-: You Lost The Game. :-***\n");
+        printf("\n***-: You Lost The Game. :-***\n", 12);
     }
 
     //Ask if the user wants to play again (AI)
-    printf("\nWould you like to play again? (y/n): ");
+    printf("\nWould you like to play again? (y/n): ", 14);
     playAgain = _getch(); //replay loop
     
     printf("\n"); //next line for clarity
@@ -70,6 +85,6 @@ int main()
 
 } while (playAgain == 'y' || playAgain == 'Y'); // continue if user presses y or Y
 
-printf("Thank you for playing!\n");
+printf("Thank you for playing!\n", 12);
 return 0;
 }
