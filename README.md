@@ -5,18 +5,18 @@
 - Thank you for reading & enjoy the game!
 
 ## Why a slotMachine?
-- Shinji Hakari is a Character from the popular Manga/Anime Series Jujutsu Kaisen, he is my favorite character and his whole ability revolves around luck and gambling, so I decided to make a slot machine game based around his luck mechanic.
+- Shinji Hakari is a Character from the popular Manga/Anime Series Jujutsu Kaisen, he is my favorite character and his whole ability revolves around luck and gambling, so I decided to make a slot machine game.
 
 ## How to play
-- Step 1: TBA
-- Step 2: TBA
-- Step 3: TBA
-- Step 4: TBA
+- Step 1: Press 1 to play normal mode (spinning)
+- Step 2: Press 2 to enter the shop to buy Luck Enhancers
+- Step 3: Press 3 to see your stats
+- Step 4: Press q to quit the game
 
 # How to Download
 - Download the repo as .ZIP / or your preferred method
 - Extract to folder
-- Open slotMachine.exe in dist/ folder
+- Open highroller.exe in dist/ folder
 - Enjoy!
 
 ## Requirements
