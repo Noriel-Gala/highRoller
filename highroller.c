@@ -1,20 +1,24 @@
+//SlotMachine Arcade Game NES Style, Noriel Gala, 12/3/24
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <windows.h> // for system("cls") & Sleep
-#include <time.h>
+#include <time.h> //for delay
 #include <conio.h> // for _kbhit() and _getch()
 #include <mmsystem.h> // for sound functions
 #include <stdarg.h> // for variable arguments
 
-void gotoxy(int x, int y) {
+//Most of the UI & Quality of Life was done by AI, I made the spinning slots mechanic
+
+void gotoxy(int x, int y) { //handles cursur position for writing text (AI)
     COORD coord = {x - 1, y - 1}; // 0-based indexing
     SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
 }
 
-void printCentered(const char *format, int y, ...) {
+void printCentered(const char *format, int y, ...) { //Centers Text (AI)
     CONSOLE_SCREEN_BUFFER_INFO csbi;
     GetConsoleScreenBufferInfo(GetStdHandle(STD_OUTPUT_HANDLE), &csbi);
-    int consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1;
+    int consoleWidth = csbi.srWindow.Right - csbi.srWindow.Left + 1; //width of screen
 
     va_list args;
     va_start(args, y);
@@ -32,7 +36,7 @@ void printCentered(const char *format, int y, ...) {
     va_end(args);
 }
 
-void setConsoleFullscreen() {
+void setConsoleFullscreen() { //Fullscreens the game upon opening (AI)
     HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
     COORD largestSize = GetLargestConsoleWindowSize(hOut);
     SMALL_RECT windowSize = {0, 0, largestSize.X - 1, largestSize.Y - 1};
@@ -40,7 +44,7 @@ void setConsoleFullscreen() {
     SetConsoleScreenBufferSize(hOut, largestSize);
 }
 
-void displayMenu(const char *asciiArt[], int lines, int playerMoney) {
+void displayMenu(const char *asciiArt[], int lines, int playerMoney) { //Used to display the main game title
     system("cls");
 
     // Display High Roller title
@@ -58,7 +62,7 @@ void displayMenu(const char *asciiArt[], int lines, int playerMoney) {
     printCentered("Press (q) to quit game (exit)", 17);
 }
 
-void displayShop(int playerMoney) {
+void displayShop(int playerMoney) { //Displays shop (AI)
     system("cls");
     printCentered("Welcome to the Shop!", 5);
     printCentered("1. Buy Luck Enhancer (+1 winning chance) - $10", 7);
@@ -94,7 +98,7 @@ void playNormalMode(int *playerMoney, int *luckEnhancers, int *totalCashEarned, 
         PlaySound("spinning.wav", NULL, SND_ASYNC | SND_FILENAME); // Play spinning sound effects
 
         DWORD startTime = GetTickCount();
-        DWORD elapsedTime = 0;
+        DWORD elapsedTime = 0; //sets timer to 0
 
         while (elapsedTime < 5000) { // Spin for 5 seconds
             Sleep(80);
@@ -107,16 +111,17 @@ void playNormalMode(int *playerMoney, int *luckEnhancers, int *totalCashEarned, 
             printCentered(numbers, 12);
             fflush(stdout);
 
-            elapsedTime = GetTickCount() - startTime;
+            elapsedTime = GetTickCount() - startTime; //stops timer at 5 seconds
         }
         PlaySound(NULL, 0, SND_PURGE);
 
+        //from Float winprobability to printCentered(Won the game) everything except the PlaySound Jackpot is AI
         float winProbability = (float)rand() / RAND_MAX;
         if (winProbability < winChance) {
             *playerMoney += 1000; // Player wins 1,000x the buy-in
             *totalCashEarned += 1000;
             (*timesWon)++;
-            PlaySound("jackpot.wav", NULL, SND_ASYNC | SND_FILENAME);
+            PlaySound("jackpot.wav", NULL, SND_ASYNC | SND_FILENAME); //Plays sound effect when you win
             printCentered("***-: You Won The Game! :-***", 12);
         } else {
             *playerMoney -= 1; // Deduct 1 dollar for the roll
@@ -124,7 +129,7 @@ void playNormalMode(int *playerMoney, int *luckEnhancers, int *totalCashEarned, 
             printCentered("***-: You Lost The Game. :-***", 12);
         }
 
-        printCentered("\nWould you like to play again? (y/n) or return to main menu (m): ", 14);
+        printCentered("\nWould you like to play again? (y/n) or return to main menu (m): ", 14); //Asks if they'd like to play again return to main menu
         playAgain = _getch();
 
         if (playAgain == 'n' || playAgain == 'N') {
@@ -132,7 +137,7 @@ void playNormalMode(int *playerMoney, int *luckEnhancers, int *totalCashEarned, 
             exit(0);
         } else if (playAgain == 'm' || playAgain == 'M') {
             printf("Returning to the main menu...\n");
-            PlaySound("themesong.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+            PlaySound("themesong.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP); //Plays themesong once returning to main menu is chosen
             return;
         }
 
@@ -141,7 +146,7 @@ void playNormalMode(int *playerMoney, int *luckEnhancers, int *totalCashEarned, 
     printf("Thank you for playing!\n");
 }
 
-void shop(int *playerMoney, int *luckEnhancers) {
+void shop(int *playerMoney, int *luckEnhancers) { //Displays shop (AI)
     char choice;
     do {
         displayShop(*playerMoney);
@@ -162,14 +167,14 @@ void shop(int *playerMoney, int *luckEnhancers) {
     } while (choice != 'm' && choice != 'M');
 }
 
-void displayStats(int totalCashEarned, int timesWon, int moneySpent) {
+void displayStats(int totalCashEarned, int timesWon, int moneySpent) { //Displays stats menu (AI)
     system("cls");
     printCentered("Game Statistics", 5);
     printCentered("Total Cash Earned: $%d", 7, totalCashEarned);
     printCentered("Total Times Won: %d", 8, timesWon);
     printCentered("Total Money Spent: $%d", 9, moneySpent);
     printCentered("Press any key to return to the main menu", 11);
-    _getch();
+    _getch(); //devours key used to return back to main menu
 }
 
 
@@ -184,13 +189,16 @@ int main() {
         "          __/ |                                 ",
         "         |___/                                  "
     };
+    //beautiful ascii art, I used AI to Format it correctly,
 
+    //starting stats, spinning costs 1 dollar
     int playerMoney = 100;
     int luckEnhancers = 0;
     int totalCashEarned = 0;
     int timesWon = 0;
     int moneySpent = 0;
 
+    //Fullscreens the game upon opening .exe (AI)
     system("mode con: cols=700 lines=700");
     keybd_event(VK_MENU, 0x38, 0, 0); // Press ALT
     keybd_event(VK_RETURN, 0x1C, 0, 0); // Press ENTER
@@ -198,9 +206,9 @@ int main() {
     keybd_event(VK_MENU, 0x38, KEYEVENTF_KEYUP, 0); // Release ALT
 
     setConsoleFullscreen();
-    PlaySound("themesong.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP);
+    PlaySound("themesong.wav", NULL, SND_ASYNC | SND_FILENAME | SND_LOOP); //Plays theme song
 
-    while (1) {
+    while (1) { //Gets data for stat menu (AI)
         displayMenu(asciiArt, 7, playerMoney);
         char choice = _getch();
 

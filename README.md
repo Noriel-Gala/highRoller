@@ -17,6 +17,7 @@
 - Download the repo as .ZIP / or your preferred method
 - Extract to folder
 - Open highroller.exe in dist/ folder
+- If the game isn't showing or loading correctly just run as Adminstrator & that should fix it
 - Enjoy!
 
 ## Requirements
